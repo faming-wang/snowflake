@@ -1,4 +1,4 @@
-#include "idworker.h"
+#include "snowflake.h"
 
 #include <stdexcept>
 
@@ -18,7 +18,7 @@ const qint64 TimestampLeftShift = SequenceBits + WorkerIdBits + DatacenterIdBits
 const qint64 Twepoch = 1288834974657L;
 }
 
-class IdWorker::Private
+class Snowflake::Private
 {
 public:
     void initialize()
@@ -88,7 +88,7 @@ public:
     QMutex lock;
 };
 
-IdWorker::IdWorker(qint64 workerId, qint64 datacenterId, qint64 sequence)
+Snowflake::Snowflake(qint64 workerId, qint64 datacenterId, qint64 sequence)
     : d(new Private)
 {
     d->workerId     = workerId;
@@ -98,10 +98,10 @@ IdWorker::IdWorker(qint64 workerId, qint64 datacenterId, qint64 sequence)
 }
 
 // synchronized
-qint64 IdWorker::nextId()
+qint64 Snowflake::nextId()
 {
     QMutexLocker locker(&d->lock);
     return d->nextId();
 }
 
-IdWorker::~IdWorker() = default;
+Snowflake::~Snowflake() = default;
